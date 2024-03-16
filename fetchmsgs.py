@@ -1,14 +1,14 @@
 # fetch all messages from a channel through the discord api
 from config import message_fetcher
 token, channelId, batch = message_fetcher.values()
-print(f"will fetch {50 * batch} messages")
+print(f"will fetch {100 * batch} messages")
 
 
 import json
 import urllib.request as ur
 
 out = []
-def main(url = f"https://discord.com/api/v9/channels/{channelId}/messages?limit=50", count=batch):
+def main(url = f"https://discord.com/api/v9/channels/{channelId}/messages?limit=100", count=batch):
   if count == 0: return
   print(f"fetching: {url} (batches to go: {count})")
   req = ur.Request(url, headers={"Authorization": token, "User-Agent": "Mozilla 5.0"})
@@ -17,7 +17,7 @@ def main(url = f"https://discord.com/api/v9/channels/{channelId}/messages?limit=
       data = json.loads(res.read().decode())
       if data and len(data) > 0:
         out.append(data)
-        return main(f"https://discord.com/api/v9/channels/{channelId}/messages?limit=50&before={data[-1]['id']}", count-1)
+        return main(f"https://discord.com/api/v9/channels/{channelId}/messages?limit=100&before={data[-1]['id']}", count-1)
       else: return
   except Exception as e:
     print(f"ERROR: {e}")
